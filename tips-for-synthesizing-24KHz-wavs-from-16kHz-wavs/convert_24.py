@@ -4,6 +4,7 @@ import torch
 import librosa
 import time
 from scipy.io.wavfile import write
+import soundfile as sf
 from tqdm import tqdm
 
 import utils
@@ -13,6 +14,7 @@ from speaker_encoder.voice_encoder import SpeakerEncoder
 import logging
 logging.getLogger('numba').setLevel(logging.WARNING)
 
+from scripts.utils import empty_dir
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -23,7 +25,10 @@ if __name__ == "__main__":
     parser.add_argument("--use_timestamp", default=False, action="store_true")
     args = parser.parse_args()
     
+    # make an empty output dir
     os.makedirs(args.outdir, exist_ok=True)
+    empty_dir(args.outdir)
+
     hps = utils.get_hparams_from_file(args.hpfile)
 
     print("Loading model...")
@@ -83,9 +88,16 @@ if __name__ == "__main__":
             else:
                 audio = net_g.infer(c, mel=mel_tgt)
             audio = audio[0][0].data.cpu().float().numpy()
+
+            # write audio to file
             if args.use_timestamp:
                 timestamp = time.strftime("%m-%d_%H-%M", time.localtime())
-                write(os.path.join(args.outdir, "{}.wav".format(timestamp+"_"+title)), 24000, audio)
+                out_wavname = "{}.wav".format(timestamp+"_"+title)
             else:
-                write(os.path.join(args.outdir, f"{title}.wav"), 24000, audio)
+                out_wavname = f"{title}.wav"
+            out_wavfile = os.path.join(args.outdir, out_wavname)
+            # # option 1: write using scipy (precision: 25-bit, sample encoding: 32-bit floating point PCM)
+            # write(out_wavfile, 24000, audio)
+            # option 2: write using soundfile (precision: 16-bit, sample encoding: 16-big signed integer PCM)
+            sf.write(out_wavfile, audio, 24000)
             

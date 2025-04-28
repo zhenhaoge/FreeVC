@@ -1,0 +1,1 @@
+dummy|/home/users/zge/code/repo/style-tts2/Datasets/YouTube/pillow/adele.someone-like-you_vocals_short.wav|/home/users/zge/code/repo/style-tts2/Datasets/YouTube/pillow/voice_yufang_fssx2_vocals.wav

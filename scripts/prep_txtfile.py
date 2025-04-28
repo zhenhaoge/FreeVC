@@ -1,4 +1,4 @@
-# prepare the text file which contains title|src-voice-wav|tgt-voice-wav
+# prepare the text file which contains title|src-voice-wav (take content from)|tgt-voice-wav (take voice from)
 #
 # Zhenhao Ge, 2024-06-16
 
@@ -48,9 +48,9 @@ def check_pairs(src_wavs, tgt_wavs):
 def parse_args():
     usage = 'prepare the text file which contains 3 parts: title, source-wav-path, target-wav-path'
     parser = argparse.ArgumentParser(description=usage)
-    parser.add_argument('--txt-file', type=str, help='output txt file')
     parser.add_argument('--src-path', type=str, help='path to the source wavs')
     parser.add_argument('--tgt-path', type=str, help='path to the target wavs')
+    parser.add_argument('--txt-file', type=str, help='output txt file')
     return parser.parse_args()
 
 if __name__ == '__main__':
@@ -58,26 +58,33 @@ if __name__ == '__main__':
     # runtime mode
     args = parse_args()
 
-    # interactive mode
-    args = argparse.ArgumentParser()
+    # # interactive mode
+    # args = argparse.ArgumentParser()
 
-    recording_id = 'MARCHE_AssessmentTacticalEnvironment'
-    voice = 'dmytro'
-    stress = 'dictionary'
-    txt_filename = '{}_{}-{}.txt'.format(recording_id, voice, stress)
-    args.txt_file = os.path.join(work_path, 'txtfiles', txt_filename)
+    # recording_id = 'MARCHE_AssessmentTacticalEnvironment'
+    # voice = 'dmytro'
+    # stress = 'dictionary'
 
-    args.src_path = os.path.join(home_path, 'code', 'repo', 'ukr-tts', 'outputs', 'sofw', 'espnet',
-        recording_id, '{}-{}'.format(voice, stress))
-    assert os.path.isdir(args.src_path), 'path to the source wav does not exist!'.format(args.src_path)
+    # args.src_path = os.path.join(home_path, 'code', 'repo', 'ukr-tts', 'outputs', 'sofw', 'espnet',
+    #     recording_id, '{}-{}'.format(voice, stress))
+    # args.tgt_path = os.path.join(home_path, 'code', 'repo', 'ukr-tts', 'data', recording_id, 'segments')
 
-    args.tgt_path = os.path.join(home_path, 'code', 'repo', 'ukr-tts', 'data', recording_id, 'segments')
-    assert os.path.isdir(args.tgt_path), 'path to the target wav does not exist!'.format(args.tgt_path)
+    # txt_filename = '{}_{}-{}.txt'.format(recording_id, voice, stress)
+    # args.txt_file = os.path.join(work_path, 'txtfiles', txt_filename)
 
     # localize arguments
-    txt_file = args.txt_file
     src_path = args.src_path
     tgt_path = args.tgt_path
+    txt_file = args.txt_file
+
+    # check file existence
+    assert os.path.isdir(src_path), 'path to the source wav does not exist!'.format(args.src_path)
+    assert os.path.isdir(tgt_path), 'path to the target wav does not exist!'.format(args.tgt_path)
+
+    # print out arguments
+    print(f'source path: {src_path}')
+    print(f'target path: {tgt_path}')
+    print(f'text file: {txt_file}')
 
     # set wav file filter keywords
     keywords = ['_converted', '16000']

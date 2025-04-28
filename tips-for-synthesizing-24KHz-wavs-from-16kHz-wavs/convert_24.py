@@ -98,6 +98,6 @@ if __name__ == "__main__":
             out_wavfile = os.path.join(args.outdir, out_wavname)
             # # option 1: write using scipy (precision: 25-bit, sample encoding: 32-bit floating point PCM)
             # write(out_wavfile, 24000, audio)
-            # option 2: write using soundfile (precision: 16-bit, sample encoding: 16-big signed integer PCM)
+            # option 2: write using soundfile (precision: 16-bit, sample encoding: 16-bit signed integer PCM)
             sf.write(out_wavfile, audio, 24000)
             

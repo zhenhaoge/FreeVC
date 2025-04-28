@@ -2,25 +2,39 @@
 #
 # Zhenhao Ge, 2024-06-16
 
-WORK_DIR=$HOME/code/repo/free-vc
+PRESENT_DIR=${PWD}
+WORK_DIR=${1:-/home/users/zge/code/repo/free-vc}
+
+# set currernt dir to the work dir (for importing modules for FreeVC)
+cd $WORK_DIR
 
 # set text file (fid|source-wav|target-wav)
-recording_id='MARCHE_AssessmentTacticalEnvironment'
-voice='dmytro'
-stress='dictionary'
+recording_id=${2:-'MARCHE_AssessmentTacticalEnvironment'}
+voice=${3:-'dmytro'}
+stress=${4:-'dictionary'}
 txtpath=$WORK_DIR/txtfiles/${recording_id}_${voice}-${stress}.txt
+
+# set GPU device id
+device=${5:-1}
+
+# print arguments
+echo "current dir: $WORK_DIR"
+echo "recording id: ${recording_id}"
+echo "voice: ${voice}"
+echo "stress: ${stress}"
+echo "txt path: ${txtpath}"
+echo "device: ${device}"
 
 # set model
 # ptfile=$WORK_DIR/checkpoints/freevc.pth # freevc
 ptfile=$WORK_DIR/checkpoints/24kHz/freevc-24.pth # freevc-24
 [ ! -f $ptfile ] && echo "model $ptfile does not exist!" && exit 1
+echo "model file: ${ptfile}"
 
 # set output dir
 ptbase=$(basename  ${ptfile%.*})
 outdir=$WORK_DIR/outputs/${recording_id}/${ptbase}_${voice}-${stress}
 echo "output dir: $outdir"
-
-device=2
 
 ## run 1: use model freevc.pth
 
@@ -50,3 +64,5 @@ else
     echo "model $ptfile does not exist!"
 fi
 
+# set current dir back to the original
+cd $PRESENT_DIR
